@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
-const getPageLogin = (req: Request, res: Response) => {
-    
+const loginAPI = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
 };
 
-export { getPageLogin };
+const handleloginAPI = (req: Request, res: Response) => {};
+
+const createUserAPI = (req: Request, res: Response) => {};
+
+export { loginAPI, handleloginAPI, createUserAPI };

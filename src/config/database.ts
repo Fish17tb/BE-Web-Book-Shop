@@ -1,32 +1,28 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 
-const dbState = [
-    {
-        value: 0,
-        label: "Disconnected",
-    },
-    {
-        value: 1,
-        label: "Connected",
-    },
-    {
-        value: 2,
-        label: "Connecting",
-    },
-    {
-        value: 3,
-        label: "Disconnecting",
-    },
-];
-
 export const connection = async () => {
-    const options = {
-        user: process.env.DB_USER,
-        pass: process.env.DB_PASSWORD,
-        dbName: process.env.DB_NAME,
-    };
+  const options = {
+    user: process.env.DB_USER,
+    pass: process.env.DB_PASSWORD,
+    dbName: process.env.DB_NAME,
+  };
+
+  try {
+    // console.log("DB_USER from env:", process.env.DB_USER);
+    // console.log("DB_HOST from env:", process.env.DB_HOST);
     await mongoose.connect(process.env.DB_HOST, options);
-    const state = Number(mongoose.connection.readyState);
-    console.log(dbState.find(f => f.value === state).label, "to database"); // connected to db
+    console.log("✅ Connected to database");
+
+    mongoose.connection.on("disconnected", () => {
+      console.log("❌ Mongoose disconnected");
+    });
+
+    mongoose.connection.on("error", (err) => {
+      console.error("❌ Mongoose connection error:", err);
+    });
+  } catch (err) {
+    console.error("❌ Cannot connect to database:", err);
+    throw err;
+  }
 };
