@@ -1,4 +1,4 @@
-import { User } from "../models/User";
+import { User } from "../models/userModel";
 import { ACCOUNT_TYPE } from "../config/constant";
 
 const initDataFake = async () => {
