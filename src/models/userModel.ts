@@ -5,14 +5,14 @@ import { ACCOUNT_TYPE } from "../config/constant";
 const userSchema = new mongoose.Schema({
   fullName: String,
   email: String,
-  passWord: String,
+  password: String,
   phone: String,
   address: String,
   avatar: String,
   accountType: {
     type: String,
     enum: Object.values(ACCOUNT_TYPE),
-    required: true,
+    // required: true,
   },
 });
 

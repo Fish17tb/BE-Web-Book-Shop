@@ -11,17 +11,22 @@ import webRoute from "./routes/api";
 // Create Express server
 export const app = express();
 
+// config req.body
+app.use(express.urlencoded({ extended: true })); // để parse x-www-form-urlencoded
+app.use(express.json()); // for json
+
+
 // Express configuration
 app.set("port", process.env.PORT || 8888);
-app.set("views", path.join(__dirname, "../views"));
-app.set("view engine", "pug");
+// app.set("views", path.join(__dirname, "../views"));
+// app.set("view engine", "pug");
 
 app.use(logger("dev"));
 
 // Declare routes
-webRoute(app);
+webRoute(app)
 
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.use(errorNotFoundHandler);
-app.use(errorHandler);
+// app.use(errorNotFoundHandler);
+// app.use(errorHandler);
