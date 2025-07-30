@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { User } from "../../models/userModel";
+import { Role } from "../../models/roleModel";
 
 interface RegisterInput {
   fullName: string;
@@ -7,6 +8,8 @@ interface RegisterInput {
   phone: string;
   password: string;
 }
+
+const saltRounds = 10; // Password strength
 
 export const handleRegister = async ({
   fullName,
@@ -25,20 +28,29 @@ export const handleRegister = async ({
       return { success: false, error: "Email already exists" };
     }
 
+    // Lấy role mặc định là USER
+    const userRole = await Role.findOne({ name: "USER" });
+    if (!userRole) {
+      return { success: false, error: "Default role USER not found" };
+    }
+
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log("Hashing password:", password);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = new User({
       fullName,
       email,
       phone,
-      password: hashedPassword, // Đảm bảo field đúng (viết hoa/viết thường đúng theo schema)
+      password: hashedPassword,
+      roleId: userRole._id, // Gán roleId là _id của role USER
     });
 
     await newUser.save();
 
-    return { success: true };
+    // Lấy lại user mới tạo và populate roleId
+    const populatedUser = await User.findById(newUser._id).populate("roleId");
+
+    return { success: true, user:populatedUser };
   } catch (error) {
     console.error("Registration error:", error);
     return {
@@ -50,3 +62,9 @@ export const handleRegister = async ({
     };
   }
 };
+
+const hashPassword = async (password: string) => {
+  return await bcrypt.hash(password, saltRounds);
+};
+
+export { hashPassword };

@@ -1,8 +1,8 @@
-import { ACCOUNT_TYPE } from "config/constant";
+import { ACCOUNT_TYPE } from "../config/constant";
 import { Request, Response } from "express";
-import { User } from "models/userModel";
+import { User } from "../models/userModel";
 
-const createUSerAPI = async (req: Request, res: Response) => {
+const createUserAPI = async (req: Request, res: Response) => {
   try {
     const { fullName, email, password, phone, address, avatar, accountType } =
       req.body;
@@ -90,4 +90,4 @@ const createUSerAPI = async (req: Request, res: Response) => {
   }
 };
 
-export { createUSerAPI };
+export { createUserAPI };
