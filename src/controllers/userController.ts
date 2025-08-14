@@ -1,6 +1,15 @@
 import { ACCOUNT_TYPE } from "../config/constant";
 import { Request, Response } from "express";
 import { User } from "../models/userModel";
+import { getListUser } from "../services/user/userService";
+
+const getUserAPI = async (req: Request, res: Response) => {
+  const users = await getListUser();
+  return res.status(200).json({
+    errorCode: 0,
+    data: users,
+  });
+};
 
 const createUserAPI = async (req: Request, res: Response) => {
   try {
@@ -18,7 +27,7 @@ const createUserAPI = async (req: Request, res: Response) => {
     ) {
       return res.status(400).json({
         errorCode: 1,
-        message: "Missing required fields",  
+        message: "Missing required fields",
       });
     }
 
@@ -90,4 +99,4 @@ const createUserAPI = async (req: Request, res: Response) => {
   }
 };
 
-export { createUserAPI };
+export { createUserAPI, getUserAPI };

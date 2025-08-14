@@ -4,6 +4,7 @@ import { User } from "../../models/userModel";
 import "dotenv/config";
 
 const JWT_SECRET = process.env.JWT_SECRET || "hnv-secret-003"; // tốt nhất nên để trong .env
+const EXPIRES_IN: any = process.env.EXPIRES_IN;
 
 export const handleLogin = async (email: string, password: string) => {
   try {
@@ -21,11 +22,11 @@ export const handleLogin = async (email: string, password: string) => {
       id: user._id,
       fullName: user.fullName,
       email: user.email,
-      roleId: user.roleId
+      roleId: user.roleId,
     };
 
     const access_token = jwt.sign(payload, JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: EXPIRES_IN,
     });
 
     return { success: true, access_token };
