@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { Role } from "../../models/roleModel";
 
 const fetchAccountAPI = async (req: Request, res: Response) => {
+  // Đọc header delay (nếu có)
+  const delay = parseInt(req.headers["delay"] as string) || 0;
+
   // Thông tin user đã được gán vào req.user bởi checkValidJWT
   const user = (req as any).user;
   if (!user) {
@@ -12,24 +14,16 @@ const fetchAccountAPI = async (req: Request, res: Response) => {
     });
   }
 
-  // Lấy thông tin đầy đủ của role
-  let roleInfo = null;
-  try {
-    if (user.roleId) {
-      roleInfo = await Role.findById(user.roleId).lean();
-    }
-  } catch (err) {
-    roleInfo = null;
-  }
-
-  return res.status(200).json({
-    errorCode: 0,
-    message: "Lấy thông tin người dùng thành công",
-    data: {
-      ...user,
-      role: roleInfo,
-    },
-  });
+  // Thêm delay trước khi trả response
+  setTimeout(() => {
+    return res.status(200).json({
+      errorCode: 0,
+      message: "Lấy thông tin người dùng thành công",
+      data: {
+        ...user,
+      },
+    });
+  }, delay);
 };
 
 export { fetchAccountAPI };
