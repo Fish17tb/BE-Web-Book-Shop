@@ -4,19 +4,22 @@ import express, { Express } from "express";
 import { getUserAPI } from "../controllers/userController";
 import { checkValidJWT } from "../middlewares/JWT";
 import { fetchAccountAPI } from "../controllers/auth/fetchAccount";
+import { refreshTokenAPI } from "../controllers/refreshToken/refreshToken"; // 👈 path đúng
 
 const router = express.Router();
 
 const webRoute = (app: Express) => {
-  router.get("/users", getUserAPI);
-  router.get("/users", createUserAPI);
+  // login & register & refresh: không check JWT
+  router.post("/auth/login", loginAPI);
+  router.post("/auth/register", registerAPI);
+  router.post("/auth/refresh-token", refreshTokenAPI); 
 
-  router.post("/login", loginAPI);
-  router.post("/register", registerAPI);
+  // Các route khác: có check JWT
+  router.get("/users", checkValidJWT, getUserAPI);
+  router.get("/users/create", checkValidJWT, createUserAPI);
+  router.get("/account", checkValidJWT, fetchAccountAPI);
 
-  router.get("/account", fetchAccountAPI);
-
-  app.use("/v1/api", checkValidJWT, router);
+  app.use("/api/v1", router);
 };
 
 export default webRoute;
